@@ -46,13 +46,13 @@ namespace VisualizingEngine::GridSystem
 		m_Cells.shrink_to_fit();
 	}
 
-	void GridSystem::Grid::InteractWithCell(const sf::Vector2i& mousePosition, InteractMethod method)
+	int GridSystem::Grid::InteractWithCell(const sf::Vector2i& mousePosition, InteractMethod method, std::optional<int>* previousIndex)
 	{
 		Cell* interactCell = GetInteractedCell(mousePosition);
 		if (!interactCell) [[unlikely]]
 		{
 			LOG_MSG("Grid: Interacted Cell Not Valid!")
-			return;
+			return -1;
 		}
 
 		auto UpdateInteractedCell = [=](CellState state)
@@ -67,21 +67,24 @@ namespace VisualizingEngine::GridSystem
 		//dont override the target and start cells when placing and removing walls
 		case InteractMethod::CREATE_WALL:
 			if (interactCell->GetState() == CellState::TARGET || interactCell->GetState() == CellState::START)
-				break;
+				return -1;
 			UpdateInteractedCell(CellState::BLOCK);
 			break;
 		case InteractMethod::ERASE_WALL:
 			if (interactCell->GetState() == CellState::TARGET || interactCell->GetState() == CellState::START)
-				break;
+				return -1;
 			UpdateInteractedCell(CellState::AVAILABLE);
 			break;
 		case InteractMethod::START_POINT:
 			//start point should only be allowed to be on available cells
 			if (interactCell->GetState() == CellState::BLOCK || interactCell->GetState() == CellState::TARGET || interactCell->GetState() == CellState::START)
-				break;
+				return -1;
 
 			if (m_StartCell)
+			{
 				m_StartCell->SetState(CellState::AVAILABLE);
+				previousIndex->value() = m_StartCell->GetID();
+			}
 
 			m_StartCell = interactCell;
 			UpdateInteractedCell(CellState::START);
@@ -89,10 +92,13 @@ namespace VisualizingEngine::GridSystem
 		case InteractMethod::TARGET_POINT:
 			//end point only available on empty cells
 			if (interactCell->GetState() == CellState::BLOCK || interactCell->GetState() == CellState::START || interactCell->GetState() == CellState::TARGET)
-				break;
+				return -1;
 
 			if (m_TargetCell)
+			{
 				m_TargetCell->SetState(CellState::AVAILABLE);
+				previousIndex->value() = m_StartCell->GetID();
+			}
 
 			m_TargetCell = interactCell;
 			UpdateInteractedCell(CellState::TARGET);
@@ -101,12 +107,67 @@ namespace VisualizingEngine::GridSystem
 			LOG_MSG("GRID: Interact Method Invalid!")
 			break;
 		}
+
+		return interactCell->GetID();
+	}
+
+	void Grid::VisitCell(int index)
+	{
+		m_Cells.at(index)->SetState(CellState::VISITED);
+	}
+
+	void Grid::LookCell(int index)
+	{
+		m_Cells.at(index)->SetState(CellState::LOOKED);
 	}
 
 	void Grid::Draw(sf::RenderWindow* window)
 	{
 		for (const auto& cell : m_Cells)
-			cell.get()->Draw(window);
+			cell->Draw(window);
+	}
+
+	std::vector<CellState> GridSystem::Grid::GetGraphMapData() const
+	{
+		//O(N), maybe could be btr idk
+		std::vector<CellState> tempStorage;
+
+		//auto = cell iterator
+		for (const auto& currentCell : m_Cells)
+		{
+			tempStorage.push_back(currentCell->GetState());
+		}
+
+		LOG_MSG("Grid: Graph Map Data Size - %i", tempStorage.size())
+		return tempStorage;
+	}
+
+	const Cell* GridSystem::Grid::GetStartCell() const
+	{
+		if (m_StartCell)
+		{
+			LOG_MSG("Grid: Start Cell Valid!")
+			return m_StartCell;
+		}
+		else
+		{
+			LOG_MSG("Grid: Start Cell IS NOT Valid!")
+			return nullptr;
+		}
+	}
+
+	const Cell* GridSystem::Grid::GetTargetCell() const
+	{
+		if (m_TargetCell)
+		{
+			LOG_MSG("Grid: Target Cell Valid!")
+			return m_TargetCell;
+		}
+		else
+		{
+			LOG_MSG("Grid: Target Cell IS NOT Valid!")
+			return nullptr;
+		}
 	}
 
 	bool Grid::InitializeCells()
@@ -124,7 +185,7 @@ namespace VisualizingEngine::GridSystem
 		//skip the static class... I guess? idk, its weird when not doing =1 or <=
 		for (unsigned short i = 1; i <= cellArea; i++)
 		{
-			m_Cells.push_back(std::make_unique<Cell>(i + 1, currentGridPosition, currentScreenPosition));
+			m_Cells.push_back(std::make_unique<Cell>(i, currentGridPosition, currentScreenPosition));
 			
 			if (i % m_Dimensions.x_ == 0)
 			{

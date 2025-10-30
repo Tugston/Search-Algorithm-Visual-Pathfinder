@@ -73,31 +73,31 @@ namespace VisualizingEngine::GridSystem
 
 		auto changeColor = [=](sf::Color color)
 			{
-				m_Shape.get()->setFillColor(color);
+				m_Shape->setFillColor(color);
 			};
 
 		switch (m_State)
 		{
 		case CellState::AVAILABLE:
-			changeColor(sf::Color(m_NormalColor.r_, m_NormalColor.g_, m_NormalColor.b_));
+			m_Shape->setFillColor(sf::Color(m_NormalColor.r_, m_NormalColor.g_, m_NormalColor.b_));
 			break;
 		case CellState::LOOKED:
-			changeColor(sf::Color(m_LookColor.r_, m_LookColor.g_, m_LookColor.b_));
+			m_Shape->setFillColor(sf::Color(m_LookColor.r_, m_LookColor.g_, m_LookColor.b_));
 			break;
 		case CellState::BLOCK:
-			changeColor(sf::Color(m_BlockColor.r_, m_BlockColor.g_, m_LookColor.b_));
+			m_Shape->setFillColor(sf::Color(m_BlockColor.r_, m_BlockColor.g_, m_LookColor.b_));
 			break;
 		case CellState::VISITED:
-			changeColor(sf::Color(m_VisitedColor.r_, m_VisitedColor.g_, m_VisitedColor.b_));
+			m_Shape->setFillColor(sf::Color(m_VisitedColor.r_, m_VisitedColor.g_, m_VisitedColor.b_));
 			break;
 		case CellState::START:
-			changeColor(sf::Color(m_StartColor.r_, m_StartColor.g_, m_StartColor.b_));
+			m_Shape->setFillColor(sf::Color(m_StartColor.r_, m_StartColor.g_, m_StartColor.b_));
 			break;
 		case CellState::TARGET:
-			changeColor(sf::Color(m_TargetColor.r_, m_TargetColor.g_, m_TargetColor.b_));
+			m_Shape->setFillColor(sf::Color(m_TargetColor.r_, m_TargetColor.g_, m_TargetColor.b_));
 			break;
 		default:
-			changeColor(sf::Color(0, 255, 0)); //obvious error color
+			m_Shape->setFillColor(sf::Color(0, 255, 0)); //obvious error color
 			break;
 		}
 	}
@@ -115,8 +115,8 @@ namespace VisualizingEngine::GridSystem
 
 	void Cell::AddOutline()
 	{
-		m_Shape.get()->setOutlineColor(sf::Color(m_BorderColor.r_, m_BorderColor.g_, m_BorderColor.b_));
-		m_Shape.get()->setOutlineThickness(1.f);
+		m_Shape->setOutlineColor(sf::Color(m_BorderColor.r_, m_BorderColor.g_, m_BorderColor.b_));
+		m_Shape->setOutlineThickness(1.f);
 	}
 
 	//oversophisticated set color function to avoid a long api for the class

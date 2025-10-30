@@ -30,7 +30,8 @@ namespace VisualizingEngine::GridSystem
 	using CellShape = std::unique_ptr<sf::RectangleShape>;
 	using CellState = Algorithms::Utility::NodeStatus;
 	using CellDimensions = sf::Vector2f; //just want to abstract away sf::Vector2 since I am working with my own completely different Vector2 as well
-
+	
+	//Vector2 for the actual grid positions of cells
 	struct Vector2
 	{
 		uint8_t x_;
@@ -89,7 +90,7 @@ namespace VisualizingEngine::GridSystem
 		Vector2 GetGridPosition() const { return m_GridPosition; }
 		const CellDimensions& GetWindowPosition() const { return m_WindowPosition; }
 		CellState GetState() const { return m_State; }
-		int GetID() const { return m_ID; }
+		int GetID() const { return m_ID - 1; }
 		
 		//statics
 		static CellDimensions GetSize() { return m_Size; }
@@ -110,7 +111,7 @@ namespace VisualizingEngine::GridSystem
 		void AddOutline();
 
 	private:
-		int m_ID;
+		int m_ID; //subtract one to get the cell array index
 		Vector2 m_GridPosition;
 		CellDimensions m_WindowPosition;
 		CellShape m_Shape;

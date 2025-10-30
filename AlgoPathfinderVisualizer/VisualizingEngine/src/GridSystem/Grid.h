@@ -13,6 +13,7 @@
 
 #include "Cell.h"
 #include <vector>
+#include <optional>
 
 namespace VisualizingEngine::GridSystem
 {
@@ -30,10 +31,21 @@ namespace VisualizingEngine::GridSystem
 			TARGET_POINT
 		};
 
-		//set all of these to be one function is what I am current working on
-		void InteractWithCell(const sf::Vector2i& mousePosition, InteractMethod method);
+		//returns the cell id of the interacted cell
+		//if no cell was interacted with, returns -1
+		//previousIndex is for start and stop position removals
+		int InteractWithCell(const sf::Vector2i& mousePosition, InteractMethod method, std::optional<int>* previousIndex = nullptr);
+
+		void VisitCell(int index);
+		void LookCell(int index);
 
 		void Draw(sf::RenderWindow* window);
+
+		std::vector<CellState> GetGraphMapData() const;
+		const Cell* GetStartCell() const;
+		const Cell* GetTargetCell() const;
+
+		Vector2 GetDimensions() const { return m_Dimensions; }
 
 	protected:
 		bool InitializeCells();

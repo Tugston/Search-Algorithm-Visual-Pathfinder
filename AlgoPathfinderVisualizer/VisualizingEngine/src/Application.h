@@ -13,6 +13,7 @@
 #define APPLICATION_H
 
 #include "GridSystem/Grid.h"
+#include "Algorithms.h"
 #include <string>
 
 namespace VisualizingEngine
@@ -39,6 +40,7 @@ namespace VisualizingEngine
 
 		std::unique_ptr<GridSystem::Grid> m_Grid;
 		std::shared_ptr<sf::RenderWindow> m_Window;
+		std::unique_ptr<Algorithms::Algorithms> m_AlgoAPI;
 
 	private:
 		Application();
