@@ -14,7 +14,7 @@
 
 namespace VisualizingEngine
 {
-	Application::Application()
+	Application::Application(): m_StartPlaced(false), m_TargetPlaced(false)
 	{
 		LOG_MSG("Application: Created!")
 	}
@@ -36,13 +36,13 @@ namespace VisualizingEngine
 		//this is for the saved data template board setups
 		if (startCell && targetCell)
 			m_AlgoAPI = std::make_unique<Algorithms::Algorithms>(m_Grid->GetGraphMapData(), startCell->GetID(), targetCell->GetID(),
-				[this](int idx) { m_Grid->VisitCell(idx); },
-				[this](int idx) { m_Grid->LookCell(idx); },
+				[=](int idx) { VisitCellCallback(idx); },
+				[=](int idx) { LookCellCallback(idx); },
 				m_Grid->GetDimensions().y_, m_Grid->GetDimensions().x_);
 		else
 			m_AlgoAPI = std::make_unique<Algorithms::Algorithms>(m_Grid->GetGraphMapData(), 
-				[this](int idx) { m_Grid->VisitCell(idx); },
-				[this](int idx) { m_Grid->VisitCell(idx); },
+				[=](int idx) { VisitCellCallback(idx); },
+				[=](int idx) { LookCellCallback(idx); },
 				m_Grid->GetDimensions().y_, m_Grid->GetDimensions().x_);
 	}
 
@@ -78,16 +78,19 @@ namespace VisualizingEngine
 							std::optional<int> previousPosition = -1;
 							const int interactedIndex = m_Grid->InteractWithCell(mousePosition, GridSystem::Grid::InteractMethod::START_POINT, &previousPosition);
 							m_AlgoAPI->UpdateGraphCell(interactedIndex, Algorithms::Utility::NodeStatus::START, previousPosition);
+							m_StartPlaced = true;
 						}
 						else if (pressedKey->scancode == sf::Keyboard::Scancode::Num2)
 						{
 							std::optional<int> previousPosition = -1;
 							const int interactedIndex = m_Grid->InteractWithCell(mousePosition, GridSystem::Grid::InteractMethod::TARGET_POINT, &previousPosition);
 							m_AlgoAPI->UpdateGraphCell(interactedIndex, Algorithms::Utility::NodeStatus::TARGET, previousPosition);
+							m_TargetPlaced = true;
 						}
 						else if (pressedKey->scancode == sf::Keyboard::Scancode::Enter)
 						{
-							m_AlgoAPI->StartSearch();
+							if(m_StartPlaced && m_TargetPlaced)
+								m_AlgoAPI->StartSearch();
 						}
 					}
 				}
@@ -130,4 +133,17 @@ namespace VisualizingEngine
 		//display everything last
 		window->display();
 	}
+
+	void Application::VisitCellCallback(int cellIndex)
+	{
+		m_Grid->VisitCell(cellIndex);
+		Draw();
+	}
+
+	void Application::LookCellCallback(int cellIndex)
+	{
+		m_Grid->LookCell(cellIndex);
+		Draw();
+	}
+
 }

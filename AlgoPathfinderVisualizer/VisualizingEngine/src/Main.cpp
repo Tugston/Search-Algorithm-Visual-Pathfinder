@@ -15,7 +15,7 @@
 int main(int argc, char* argv[])
 {
 	VisualizingEngine::Application* app = &VisualizingEngine::Application::GetApplication();
-	app->init("Visualization Engine", { 800, 800 }, { 7, 7 });
+	app->init("Visualization Engine", { 800, 800 }, { 20, 20 });
 	app->Start();
 	app->Update();
 	return 0;

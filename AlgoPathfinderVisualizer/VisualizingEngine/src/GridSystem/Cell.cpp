@@ -71,11 +71,6 @@ namespace VisualizingEngine::GridSystem
 
 		m_State = newState;
 
-		auto changeColor = [=](sf::Color color)
-			{
-				m_Shape->setFillColor(color);
-			};
-
 		switch (m_State)
 		{
 		case CellState::AVAILABLE:
@@ -106,8 +101,8 @@ namespace VisualizingEngine::GridSystem
 	{
 		m_BorderColor = { 0, 0, 0 };
 		m_NormalColor = { 255, 255, 255 };
-		m_LookColor = { 155, 155, 155 };
-		m_BlockColor = { 25, 25, 25 };
+		m_LookColor = { 150, 150, 150 };
+		m_BlockColor = { 25, 25, 255 };
 		m_VisitedColor = { 175, 0, 0 };
 		m_TargetColor = { 0, 175, 0 };
 		m_StartColor = { 137, 207, 240 };

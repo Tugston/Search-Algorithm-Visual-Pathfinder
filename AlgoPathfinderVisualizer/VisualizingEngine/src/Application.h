@@ -46,6 +46,12 @@ namespace VisualizingEngine
 		Application();
 		Application(const Application&) = delete;
 		Application& operator=(const Application&) = delete;
+
+		void VisitCellCallback(int cellIndex);
+		void LookCellCallback(int cellIndex);
+
+		bool m_StartPlaced;
+		bool m_TargetPlaced;
 	};
 }
 

@@ -36,7 +36,8 @@ namespace Algorithms
 		virtual void Visit() = 0;
 		virtual void Look() = 0;
 
-		//all returned indexes are valid 
+		//all returned indexes are valid
+		// top, right, bottom, left order
 		std::stack<int> GetAdjacentIndexes(int currentIndex);
 
 		std::stack<int> m_PoppedIndexes;
@@ -48,7 +49,7 @@ namespace Algorithms
 		uint8_t m_Width;
 		uint8_t m_Height;
 		bool m_IterativeSearch;
-
+		bool m_SearchFinished = false;
 	};
 }
 

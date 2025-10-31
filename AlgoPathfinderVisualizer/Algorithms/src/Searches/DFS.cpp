@@ -8,6 +8,8 @@
 */
 #include "DFS.h"
 #include "../../VisualizingEngine/src/Logger/Logger.h"
+#include<chrono>
+#include<thread>
 
 namespace Algorithms
 {
@@ -29,15 +31,43 @@ namespace Algorithms
 
 	void DFS::RecursiveSearch()
 	{
-		std::stack<int> neighbors = GetAdjacentIndexes(m_StartIndex);
-		int index = 0;
-		while(!neighbors.empty())
+		m_PoppedIndexes.push(m_StartIndex);
+		while(!m_PoppedIndexes.empty())
 		{
-			int visited = neighbors.top();
-			neighbors.pop();
-			index++;
-			m_LookEvent(visited);
-			m_Graph.at(visited) = Utility::NodeStatus::VISITED;
+			int currentIndex = m_PoppedIndexes.top();
+			m_PoppedIndexes.pop();
+			if (m_Graph.at(currentIndex) == Utility::NodeStatus::VISITED)
+				continue;
+
+			m_VisitEvent(currentIndex);
+			m_Graph.at(currentIndex) = Utility::NodeStatus::VISITED;
+
+			std::stack<int> neighbors = GetAdjacentIndexes(currentIndex);
+			while (!neighbors.empty())
+			{
+				int currentNeighbor = neighbors.top();
+				neighbors.pop();
+				
+				if (m_Graph.at(currentNeighbor) == Utility::NodeStatus::VISITED || m_Graph.at(currentNeighbor) == Utility::NodeStatus::LOOKED)
+				{
+					continue;
+				}
+				else if (m_Graph.at(currentNeighbor) == Utility::NodeStatus::TARGET)
+				{
+					m_SearchFinished = true;
+					break;
+				}
+
+				m_Graph.at(currentNeighbor) = Utility::NodeStatus::LOOKED;
+				m_LookEvent(currentNeighbor);
+
+				m_PoppedIndexes.push(currentNeighbor);
+			}
+
+			if (m_SearchFinished)
+				break;
+			
+			std::this_thread::sleep_for(std::chrono::milliseconds(200));
 		}
 
 		//supposed to be size_t, but ints work with my macro

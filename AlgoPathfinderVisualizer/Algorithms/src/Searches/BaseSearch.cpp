@@ -31,13 +31,20 @@ namespace Algorithms
 		std::stack<int> tempStack;
 		
 
-		LOG_MSG("[Base Search]: offset 1: %i, %i", currentIndex + m_Width, m_Width * m_Height)
-		LOG_MSG("[Base Search]: offset 2: %i, %i", currentIndex - m_Width, 0)
-		
-		if (currentIndex + m_Width < m_Width * m_Height && m_Graph.at(currentIndex + m_Width) != Utility::NodeStatus::BLOCK)
-			tempStack.push(currentIndex + m_Width);
-		if (currentIndex - m_Width > 0 && m_Graph.at(currentIndex - m_Width) != Utility::NodeStatus::BLOCK)
+		LOG_MSG("[Base Search]: Top: %i, %i", currentIndex - m_Width, 0)
+		LOG_MSG("[Base Search]: Right: %i, %i", (currentIndex + 1) % m_Width, 0)
+		LOG_MSG("[Base Search]: Bottom: %i, %i", currentIndex + m_Width, m_Width * m_Height)
+		LOG_MSG("[Base Search]: Left: %i, %i\n", (currentIndex - 1) % m_Width, 0)
+	
+
+		if (currentIndex - m_Width > 0 && m_Graph.at(currentIndex - m_Width) != Utility::NodeStatus::BLOCK) //top
 			tempStack.push(currentIndex - m_Width);
+		if ((currentIndex + 1) % m_Width != 0 && m_Graph.at(currentIndex + 1) != Utility::NodeStatus::BLOCK) //right
+			tempStack.push(currentIndex + 1);
+		if (currentIndex + m_Width < m_Width * m_Height && m_Graph.at(currentIndex + m_Width) != Utility::NodeStatus::BLOCK) //bottom
+			tempStack.push(currentIndex + m_Width);
+		if ((currentIndex - 1) % m_Width != m_Width - 1 && (currentIndex - 1) % m_Width != -1 && m_Graph.at(currentIndex - 1) != Utility::NodeStatus::BLOCK) //left
+			tempStack.push(currentIndex - 1);
 		
 		return tempStack;
 	}
