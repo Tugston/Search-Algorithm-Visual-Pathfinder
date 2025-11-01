@@ -12,6 +12,8 @@
 #include "SFML/Window.hpp"
 #include "Logger/Logger.h"
 
+#include <fstream>
+
 namespace VisualizingEngine
 {
 	Application::Application(): m_StartPlaced(false), m_TargetPlaced(false)
@@ -94,21 +96,19 @@ namespace VisualizingEngine
 						}
 					}
 				}
-				else if (const auto* mb = event->getIf<sf::Event::MouseButtonPressed>())
+				
+				//my own window constrictions since sfml doesnt provide solid ones for what I need
+				if (mousePosition.x >= 0 && mousePosition.y >= 0 && mousePosition.x <= m_Window->getSize().x && mousePosition.y <= m_Window->getSize().y)
 				{
-					//my own window constrictions since sfml doesnt provide solid ones for what I need
-					if (mousePosition.x >= 0 && mousePosition.y >= 0 && mousePosition.x <= m_Window->getSize().x && mousePosition.y <= m_Window->getSize().y)
+					if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+					{ 
+						const int interactedIndex = m_Grid->InteractWithCell(mousePosition, GridSystem::Grid::InteractMethod::CREATE_WALL);
+						m_AlgoAPI->UpdateGraphCell(interactedIndex, Algorithms::Utility::NodeStatus::BLOCK);
+					}
+					else if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
 					{
-						if (mb->button == sf::Mouse::Button::Left)
-						{ 
-							const int interactedIndex = m_Grid->InteractWithCell(mousePosition, GridSystem::Grid::InteractMethod::CREATE_WALL);
-							m_AlgoAPI->UpdateGraphCell(interactedIndex, Algorithms::Utility::NodeStatus::BLOCK);
-						}
-						else if (mb->button == sf::Mouse::Button::Right)
-						{
-							int interactedIndex = m_Grid->InteractWithCell(mousePosition, GridSystem::Grid::InteractMethod::ERASE_WALL);
-							m_AlgoAPI->UpdateGraphCell(interactedIndex, Algorithms::Utility::NodeStatus::AVAILABLE);
-						}
+						int interactedIndex = m_Grid->InteractWithCell(mousePosition, GridSystem::Grid::InteractMethod::ERASE_WALL);
+						m_AlgoAPI->UpdateGraphCell(interactedIndex, Algorithms::Utility::NodeStatus::AVAILABLE);
 					}
 				}
 			}

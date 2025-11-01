@@ -13,8 +13,8 @@
 
 namespace Algorithms
 {
-	DFS::DFS(const std::vector<Utility::NodeStatus>& m_Graph, int startIndex, int targetIndex, const std::function<void(int)> visitFunction, const std::function<void(int)> lookFunction, uint8_t width, uint8_t height, bool iterative):
-		BaseSearch(m_Graph, startIndex, targetIndex, visitFunction, lookFunction, width, height, iterative)
+	DFS::DFS(const std::vector<Utility::NodeStatus>& m_Graph, int startIndex, int targetIndex, const std::function<void(int)> visitFunction, const std::function<void(int)> lookFunction, uint8_t width, uint8_t height):
+		BaseSearch(m_Graph, startIndex, targetIndex, visitFunction, lookFunction, width, height)
 	{
 
 	}
@@ -26,16 +26,12 @@ namespace Algorithms
 
 	void DFS::IterativeSearch()
 	{
-
-	}
-
-	void DFS::RecursiveSearch()
-	{
-		m_PoppedIndexes.push(m_StartIndex);
-		while(!m_PoppedIndexes.empty())
+		std::stack<int> poppedIndexes;
+		poppedIndexes.push(m_StartIndex);
+		while(!poppedIndexes.empty())
 		{
-			int currentIndex = m_PoppedIndexes.top();
-			m_PoppedIndexes.pop();
+			int currentIndex = poppedIndexes.top();
+			poppedIndexes.pop();
 			if (m_Graph.at(currentIndex) == Utility::NodeStatus::VISITED)
 				continue;
 
@@ -61,7 +57,7 @@ namespace Algorithms
 				m_Graph.at(currentNeighbor) = Utility::NodeStatus::LOOKED;
 				m_LookEvent(currentNeighbor);
 
-				m_PoppedIndexes.push(currentNeighbor);
+				poppedIndexes.push(currentNeighbor);
 			}
 
 			if (m_SearchFinished)
@@ -69,26 +65,6 @@ namespace Algorithms
 			
 			std::this_thread::sleep_for(std::chrono::milliseconds(200));
 		}
-
-		//supposed to be size_t, but ints work with my macro
-		for (int i = 0; i < m_Graph.size(); ++i)
-		{
-			if(m_Graph[i] == Utility::NodeStatus::AVAILABLE)
-				LOG_MSG("[DFS]: %i, Available", i)
-			else if(m_Graph[i] == Utility::NodeStatus::BLOCK)
-				LOG_MSG("[DFS]: %i, Block", i)
-			else if(m_Graph[i] == Utility::NodeStatus::LOOKED)
-				LOG_MSG("[DFS]: %i, Look", i)
-			else if(m_Graph[i] == Utility::NodeStatus::START)
-				LOG_MSG("[DFS]: %i, Start", i)
-			else if(m_Graph[i] == Utility::NodeStatus::TARGET)
-				LOG_MSG("[DFS]: %i, Target", i)
-			else if(m_Graph[i] == Utility::NodeStatus::VISITED)
-				LOG_MSG("[DFS]: %i, Visited", i)
-
-		
-		}
-
 	}
 
 	void DFS::Visit()
@@ -100,4 +76,5 @@ namespace Algorithms
 	{
 
 	}
+
 }

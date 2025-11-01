@@ -6,8 +6,10 @@
 *	See License file at the directory root for more information.
 *
 *	Description:
-*		Depth first search generic search implementation, both approaches are designed for a 1d array representing a 2d grid
+*		Depth first search generic search implementation, approache is designed for a 1d array representing a 2d grid
 */
+#ifndef ALGORITHM_DEPTH_FIRST_SEARCH
+#define ALGORITHM_DEPTH_FIRST_SEARCH
 
 #include "BaseSearch.h"
 
@@ -16,14 +18,15 @@ namespace Algorithms
 	class DFS : public BaseSearch
 	{
 	public:
-		DFS(const std::vector<Utility::NodeStatus>& m_Graph, int startIndex, int targetIndex, const std::function<void(int)> visitFunction, const std::function<void(int)> lookFunction, uint8_t width, uint8_t height, bool iterative);
+		DFS(const std::vector<Utility::NodeStatus>& m_Graph, int startIndex, int targetIndex, const std::function<void(int)> visitFunction, const std::function<void(int)> lookFunction, uint8_t width, uint8_t height);
 		~DFS();
 
 		virtual void IterativeSearch() override;
-		virtual void RecursiveSearch() override;
 
 	protected:
 		virtual void Visit() override;
 		virtual void Look() override;
 	};
 }
+
+#endif

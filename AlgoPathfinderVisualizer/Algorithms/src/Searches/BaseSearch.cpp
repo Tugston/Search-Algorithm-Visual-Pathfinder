@@ -11,8 +11,8 @@
 
 namespace Algorithms
 {
-	BaseSearch::BaseSearch(const std::vector<Utility::NodeStatus>& graph, int startIndex, int targetIndex, const std::function<void(int)> visitFunction, const std::function<void(int)> lookFunction, uint8_t width, uint8_t height, bool iterative):
-		m_Graph(graph), m_StartIndex(startIndex), m_TargetIndex(targetIndex), m_VisitEvent(visitFunction), m_LookEvent(lookFunction), m_Width(width), m_Height(height), m_IterativeSearch(iterative)
+	BaseSearch::BaseSearch(const std::vector<Utility::NodeStatus>& graph, int startIndex, int targetIndex, const std::function<void(int)> visitFunction, const std::function<void(int)> lookFunction, uint8_t width, uint8_t height):
+		m_Graph(graph), m_StartIndex(startIndex), m_TargetIndex(targetIndex), m_VisitEvent(visitFunction), m_LookEvent(lookFunction), m_Width(width), m_Height(height)
 	{
 		if (startIndex != targetIndex)
 		{

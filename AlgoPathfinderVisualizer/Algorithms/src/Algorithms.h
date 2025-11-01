@@ -16,6 +16,7 @@
 #include <memory>
 
 #include "Searches/DFS.h"
+#include "Searches/BFS.h"
 
 
 namespace Algorithms
@@ -34,6 +35,7 @@ namespace Algorithms
 
 	private:
 		std::unique_ptr<BaseSearch> m_DFSSearch;
+		std::unique_ptr<BaseSearch> m_BFSSearch;
 	};
 }
 

@@ -3,7 +3,7 @@ add_library(
 	Algorithms STATIC
 	"src/Algorithms.cpp"
 	"src/Algorithms.h"
- "src/Utillity/Enums.h" "src/Searches/DFS.h" "src/Searches/DFS.cpp" "src/Searches/BaseSearch.h" "src/Searches/BaseSearch.cpp")
+ "src/Utillity/Enums.h" "src/Searches/DFS.h" "src/Searches/DFS.cpp" "src/Searches/BaseSearch.h" "src/Searches/BaseSearch.cpp" "src/Searches/BFS.h" "src/Searches/BFS.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.20)
 	set_property(

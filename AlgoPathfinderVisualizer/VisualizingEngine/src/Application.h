@@ -38,6 +38,9 @@ namespace VisualizingEngine
 	protected:
 		void Draw() const;
 
+	//	void SaveGridToFile(std::string_view fileName);
+	//	void LoadGridFromFile(std::string_view fileName);
+
 		std::unique_ptr<GridSystem::Grid> m_Grid;
 		std::shared_ptr<sf::RenderWindow> m_Window;
 		std::unique_ptr<Algorithms::Algorithms> m_AlgoAPI;

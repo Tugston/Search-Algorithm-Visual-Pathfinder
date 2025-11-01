@@ -21,11 +21,11 @@ namespace Algorithms
 	class BaseSearch
 	{
 	public:
-		BaseSearch(const std::vector<Utility::NodeStatus>& m_Graph, int startIndex, int targetIndex, const std::function<void(int)> visitFunction, const std::function<void(int)> lookFunction, uint8_t width, uint8_t height, bool iterative);
+		BaseSearch(const std::vector<Utility::NodeStatus>& m_Graph, int startIndex, int targetIndex, const std::function<void(int)> visitFunction, const std::function<void(int)> lookFunction, uint8_t width, uint8_t height);
 		~BaseSearch();
 
 		virtual void IterativeSearch() = 0;
-		virtual void RecursiveSearch() = 0;
+	public:
 
 		std::vector<Utility::NodeStatus>* GetGraph() { return &m_Graph; }
 
@@ -40,7 +40,6 @@ namespace Algorithms
 		// top, right, bottom, left order
 		std::stack<int> GetAdjacentIndexes(int currentIndex);
 
-		std::stack<int> m_PoppedIndexes;
 		std::vector<Utility::NodeStatus> m_Graph;
 		std::function<void(int)> m_VisitEvent;
 		std::function<void(int)> m_LookEvent;
@@ -48,7 +47,6 @@ namespace Algorithms
 		int m_TargetIndex;
 		uint8_t m_Width;
 		uint8_t m_Height;
-		bool m_IterativeSearch;
 		bool m_SearchFinished = false;
 	};
 }
